@@ -66,9 +66,9 @@
   position: absolute;
   width: 4px;
   height: 4px;
-  background: #FFD700;
+  background: #C9A227;
   border-radius: 50%;
-  box-shadow: 0 0 8px #FFD700;
+  box-shadow: 0 0 8px #C9A227;
   pointer-events: none;
 }
 
@@ -90,11 +90,11 @@
 .gold-shimmer-text {
   background: linear-gradient(
     90deg,
-    #FFD700 0%,
+    #C9A227 0%,
     #FFF 25%,
-    #FFD700 50%,
+    #C9A227 50%,
     #b8a44e 75%,
-    #FFD700 100%
+    #C9A227 100%
   );
   background-size: 200% auto;
   color: transparent;

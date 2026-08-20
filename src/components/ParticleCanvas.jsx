@@ -1,5 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 
+/**
+ * ParticleCanvas — Gold dust constellation
+ *
+ * ~60 tiny gold particles drifting through a dark bar atmosphere.
+ * Nearby particles connect with extremely thin gold lines.
+ * On desktop, particles gently react to cursor movement (soft, not magnetic).
+ * Pauses when off-screen for performance.
+ */
 export default function ParticleCanvas() {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
@@ -17,30 +25,32 @@ export default function ParticleCanvas() {
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
-    // Dynamic density based on device width
     let isMobile = width < 768;
-    let particleCount = isMobile ? 30 : 80;
+    // ~60 on desktop, ~25 on mobile — enough to notice but never noisy
+    let particleCount = isMobile ? 25 : 60;
 
     let particles = [];
 
     class Particle {
       constructor() {
-        this.reset(true);
+        this.reset();
       }
 
-      reset(init = false) {
+      reset() {
         this.x = Math.random() * width;
         this.y = Math.random() * height;
-        this.radius = 2 + Math.random() * 2; // 2px to 4px
-        this.opacity = 0.15 + Math.random() * 0.35; // 0.15 to 0.5
-        
-        // Speed: 0.2 to 0.5 px/frame
-        const speed = 0.2 + Math.random() * 0.3;
+        // Tiny particles: 1px–2.5px — dust, not stars
+        this.radius = 1 + Math.random() * 1.5;
+        // Very low opacity — only apparent when looking closely
+        this.opacity = 0.08 + Math.random() * 0.18; // 0.08 to 0.26
+
+        // Slow natural drift: 0.08 to 0.25 px/frame
+        const speed = 0.08 + Math.random() * 0.17;
         const angle = Math.random() * Math.PI * 2;
         this.vx = Math.cos(angle) * speed;
         this.vy = Math.sin(angle) * speed;
 
-        // Spring physics state
+        // Spring physics state for mouse interaction
         this.offsetX = 0;
         this.offsetY = 0;
         this.vxOffset = 0;
@@ -52,13 +62,13 @@ export default function ParticleCanvas() {
         this.x += this.vx;
         this.y += this.vy;
 
-        // Wrap around edges
-        if (this.x < 0) this.x = width;
-        if (this.x > width) this.x = 0;
-        if (this.y < 0) this.y = height;
-        if (this.y > height) this.y = 0;
+        // Wrap around edges seamlessly
+        if (this.x < -10) this.x = width + 10;
+        if (this.x > width + 10) this.x = -10;
+        if (this.y < -10) this.y = height + 10;
+        if (this.y > height + 10) this.y = -10;
 
-        // Mouse attraction with spring physics (only on desktop/non-touch)
+        // Extremely soft mouse interaction — like disturbing dust in the air
         if (!isMobile && mouseX !== null && mouseY !== null) {
           const dx = mouseX - (this.x + this.offsetX);
           const dy = mouseY - (this.y + this.offsetY);
@@ -67,16 +77,16 @@ export default function ParticleCanvas() {
           let targetOffsetX = 0;
           let targetOffsetY = 0;
 
-          if (distance < 150) {
-            // Attract force proportional to closeness
-            const force = (150 - distance) / 150;
-            targetOffsetX = dx * force * 0.15;
-            targetOffsetY = dy * force * 0.15;
+          if (distance < 120) {
+            // Very gentle attraction — NOT magnetic
+            const force = (120 - distance) / 120;
+            targetOffsetX = dx * force * 0.08;
+            targetOffsetY = dy * force * 0.08;
           }
 
-          // Spring physics: stiffness = 0.02, damping = 0.97
-          const stiffness = 0.02;
-          const damping = 0.97;
+          // Soft spring: low stiffness, high damping
+          const stiffness = 0.015;
+          const damping = 0.96;
 
           const ax = (targetOffsetX - this.offsetX) * stiffness;
           const ay = (targetOffsetY - this.offsetY) * stiffness;
@@ -87,23 +97,29 @@ export default function ParticleCanvas() {
           this.offsetX += this.vxOffset;
           this.offsetY += this.vyOffset;
         } else {
-          // Decay offset if mouse is gone or on mobile
-          this.offsetX *= 0.95;
-          this.offsetY *= 0.95;
+          // Decay offset gracefully
+          this.offsetX *= 0.94;
+          this.offsetY *= 0.94;
         }
       }
 
       draw() {
+        const drawX = this.x + this.offsetX;
+        const drawY = this.y + this.offsetY;
+
+        // Tiny soft-edged gold dot
         ctx.beginPath();
-        ctx.arc(
-          this.x + this.offsetX,
-          this.y + this.offsetY,
-          this.radius,
-          0,
-          Math.PI * 2
-        );
-        ctx.fillStyle = `rgba(255, 215, 0, ${this.opacity})`;
+        ctx.arc(drawX, drawY, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(201, 162, 39, ${this.opacity})`;
         ctx.fill();
+
+        // Even tinier glow halo
+        if (this.radius > 1.5) {
+          ctx.beginPath();
+          ctx.arc(drawX, drawY, this.radius * 2.5, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(201, 162, 39, ${this.opacity * 0.12})`;
+          ctx.fill();
+        }
       }
     }
 
@@ -116,7 +132,7 @@ export default function ParticleCanvas() {
 
     initParticles();
 
-    // Mouse handlers
+    // ── Mouse handlers ──────────────────────────────────────────────────
     const handleMouseMove = (e) => {
       mouseRef.current.targetX = e.clientX;
       mouseRef.current.targetY = e.clientY;
@@ -132,19 +148,20 @@ export default function ParticleCanvas() {
       document.addEventListener('mouseleave', handleMouseLeave);
     }
 
-    // Resize handler
+    // ── Resize handler ──────────────────────────────────────────────────
     const handleResize = () => {
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
       isMobile = width < 768;
-      particleCount = isMobile ? 30 : 80;
+      particleCount = isMobile ? 25 : 60;
       initParticles();
     };
 
     window.addEventListener('resize', handleResize);
 
-    // Animation Loop
+    // ── Animation Loop ──────────────────────────────────────────────────
     const animate = () => {
+      // Pause when off-screen for performance
       if (!isVisible.current) {
         animationFrameId.current = requestAnimationFrame(animate);
         return;
@@ -152,15 +169,14 @@ export default function ParticleCanvas() {
 
       ctx.clearRect(0, 0, width, height);
 
-      // Smooth mouse coordinates for spring calculations
+      // Smooth mouse coordinates
       if (mouseRef.current.targetX !== null) {
         if (mouseRef.current.x === null) {
           mouseRef.current.x = mouseRef.current.targetX;
           mouseRef.current.y = mouseRef.current.targetY;
         } else {
-          // LERP mouse coordinates slightly for extra smoothness
-          mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * 0.1;
-          mouseRef.current.y += (mouseRef.current.targetY - mouseRef.current.y) * 0.1;
+          mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * 0.08;
+          mouseRef.current.y += (mouseRef.current.targetY - mouseRef.current.y) * 0.08;
         }
       } else {
         mouseRef.current.x = null;
@@ -168,13 +184,13 @@ export default function ParticleCanvas() {
       }
 
       // Update and draw particles
-      particles.forEach((p) => {
+      for (const p of particles) {
         p.update(mouseRef.current.x, mouseRef.current.y);
         p.draw();
-      });
+      }
 
-      // Draw connections
-      ctx.lineWidth = 0.5;
+      // Draw extremely subtle connection lines
+      ctx.lineWidth = 0.3;
       for (let i = 0; i < particles.length; i++) {
         const p1 = particles[i];
         const x1 = p1.x + p1.offsetX;
@@ -189,10 +205,10 @@ export default function ParticleCanvas() {
           const dy = y1 - y2;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 100) {
-            // Opacity scales down as distance gets closer to 100px
-            const lineOpacity = 0.06 * (1 - dist / 100);
-            ctx.strokeStyle = `rgba(255, 215, 0, ${lineOpacity})`;
+          if (dist < 90) {
+            // Very low opacity connections
+            const lineOpacity = 0.035 * (1 - dist / 90);
+            ctx.strokeStyle = `rgba(201, 162, 39, ${lineOpacity})`;
             ctx.beginPath();
             ctx.moveTo(x1, y1);
             ctx.lineTo(x2, y2);
@@ -206,21 +222,21 @@ export default function ParticleCanvas() {
 
     animate();
 
-    // IntersectionObserver to pause loop when out of viewport
+    // ── IntersectionObserver to pause when off-screen ────────────────────
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           isVisible.current = entry.isIntersecting;
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.05 }
     );
 
     if (containerRef.current) {
       observer.observe(containerRef.current);
     }
 
-    // Cleanup
+    // ── Cleanup ─────────────────────────────────────────────────────────
     return () => {
       cancelAnimationFrame(animationFrameId.current);
       window.removeEventListener('mousemove', handleMouseMove);
@@ -235,7 +251,8 @@ export default function ParticleCanvas() {
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden -z-10 bg-room"
+      className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden"
+      style={{ zIndex: 1 }}
     >
       <canvas ref={canvasRef} className="w-full h-full block" />
     </div>
