@@ -5,6 +5,9 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-room text-light font-inter antialiased overflow-x-hidden selection:bg-gold/30 selection:text-gold;
     background-color: #06060a;
