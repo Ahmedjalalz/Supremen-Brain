@@ -123,7 +123,7 @@ const SHELF_BOTTLES = [
 const COCKTAILS = [
   {
     id: 'cocktail-1',
-    number: 'Cocktail 01 — Bring Your Data',
+    number: 'Bring Your Data',
     title: 'Your Ingredients',
     description:
       'Connect your data through an API, upload a file, send a webhook, or stream it directly into the system.',
@@ -137,7 +137,7 @@ const COCKTAILS = [
   },
   {
     id: 'cocktail-2',
-    number: 'Cocktail 02 — Let the Engine Work',
+    number: 'Let the Engine Work',
     title: 'The Bartender Goes to Work',
     description:
       '40+ intelligence modules analyze your data through deep learning, Monte Carlo simulation, Bayesian models, and more — working together to build the prediction.',
@@ -152,7 +152,7 @@ const COCKTAILS = [
   },
   {
     id: 'cocktail-3',
-    number: 'Cocktail 03 — Get Your Pour',
+    number: 'Get Your Pour',
     title: 'Collect Your Cocktail',
     description:
       'Receive a prediction with its confidence, edge, proof, and reasoning — ready to act on through a single API.',
