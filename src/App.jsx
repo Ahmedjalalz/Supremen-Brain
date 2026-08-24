@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import EntranceAnimation from './components/EntranceAnimation';
 import HeroSection from './components/HeroSection';
-import BarParallax from './components/BarParallax';
+import VictorianBarScene from './components/VictorianBarScene';
 
 function App() {
   // Always show entrance – localStorage gate is temporarily disabled for testing
@@ -23,7 +23,7 @@ function App() {
       ) : (
         <>
           <HeroSection onReplayIntro={handleReplayIntro} />
-          <BarParallax />
+          <VictorianBarScene />
         </>
       )}
     </>
