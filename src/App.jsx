@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import EntranceAnimation from './components/EntranceAnimation';
 import HeroSection from './components/HeroSection';
 import VictorianBarScene from './components/VictorianBarScene';
+import HowItWorksScene from './components/HowItWorksScene';
+import MenuScene from './components/MenuScene';
 
 function App() {
-  // Always show entrance – localStorage gate is temporarily disabled for testing
+  // Entrance animation plays on initial load
   const [showIntro, setShowIntro] = useState(true);
 
   const handleIntroComplete = () => {
@@ -18,14 +20,11 @@ function App() {
   return (
     <>
       <div className="film-grain" />
-      {showIntro ? (
-        <EntranceAnimation onComplete={handleIntroComplete} />
-      ) : (
-        <>
-          <HeroSection onReplayIntro={handleReplayIntro} />
-          <VictorianBarScene />
-        </>
-      )}
+      {showIntro && <EntranceAnimation onComplete={handleIntroComplete} />}
+      <HeroSection onReplayIntro={handleReplayIntro} />
+      <VictorianBarScene />
+      <HowItWorksScene />
+      <MenuScene />
     </>
   );
 }

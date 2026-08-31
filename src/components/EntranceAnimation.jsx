@@ -51,7 +51,7 @@ export default function EntranceAnimation({ onComplete }) {
     setTimeout(() => onComplete(), FADE_OUT_MS);
   }, [onComplete]);
 
-  // ── Black hold (0.5s) → play & fade in ───────────────────────────────────
+  // ── Black hold (0.5s) → play & fade in + 6s safety fallback ─────────────
   useEffect(() => {
     const timer = setTimeout(() => {
       setStage('fadein');
@@ -62,7 +62,16 @@ export default function EntranceAnimation({ onComplete }) {
         });
       }
     }, BLACK_HOLD_MS);
-    return () => clearTimeout(timer);
+
+    // Global safety timeout: if video stalls or hangs, transition to hero
+    const safetyTimer = setTimeout(() => {
+      handleComplete();
+    }, 6000);
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(safetyTimer);
+    };
   }, [handleComplete]);
 
   // ── Mark as playing after fade-in duration ───────────────────────────────
@@ -140,6 +149,7 @@ export default function EntranceAnimation({ onComplete }) {
             muted
             playsInline
             preload="auto"
+            onError={handleComplete}
             style={{
               position: 'absolute',
               inset: 0,
@@ -190,9 +200,9 @@ export default function EntranceAnimation({ onComplete }) {
               fontFamily: 'Inter, sans-serif',
               fontSize:   'clamp(12px, 1.4vw, 14px)',
               color: '#b8a44e',
-              opacity: 0.65,
-              background: 'rgba(0,0,0,0.40)',
-              border: '1px solid rgba(180,164,78,0.4)',
+              opacity: 0.85,
+              background: 'rgba(0,0,0,0.60)',
+              border: '1px solid rgba(180,164,78,0.5)',
               borderRadius: 6,
               cursor: 'pointer',
               letterSpacing: '0.08em',
@@ -200,12 +210,12 @@ export default function EntranceAnimation({ onComplete }) {
               display: 'flex',
               alignItems: 'center',
               gap: 6,
-              padding: 'clamp(4px,1vh,8px) clamp(10px,2vw,16px)',
-              backdropFilter: 'blur(6px)',
-              WebkitBackdropFilter: 'blur(6px)',
+              padding: 'clamp(6px,1vh,10px) clamp(12px,2vw,18px)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
               transition: 'all 0.3s ease',
-              pointerEvents: stage === 'black' ? 'none' : 'auto',
-              visibility:    stage === 'black' ? 'hidden' : 'visible',
+              pointerEvents: 'auto',
+              visibility:    'visible',
             }}
             onMouseEnter={e => {
               e.currentTarget.style.opacity = '1';

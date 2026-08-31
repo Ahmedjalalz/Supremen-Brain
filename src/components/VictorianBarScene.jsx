@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Wine, Cpu, Database, Award, ArrowUpRight } from 'lucide-react';
 
-// ── BUBBLE & FIZZ SIMULATOR CANVAS ──────────────────────────────────
-function LiveFizzSimulator({ color = '#10b981', density = 32, width = 260, height = 340, isHovered = false }) {
+// ── HIGH PERFORMANCE BUBBLE & FIZZ CANVAS ───────────────────────────
+function LiveFizzSimulator({ color = '#10b981', density = 24, width = 260, height = 300, isHovered = false }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -11,24 +11,42 @@ function LiveFizzSimulator({ color = '#10b981', density = 32, width = 260, heigh
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let animationFrameId;
+    let isVisible = false;
+
+    // Observe visibility so canvas only runs when on-screen
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && !animationFrameId) {
+          render();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(canvas);
 
     const bubbles = Array.from({ length: density }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      radius: Math.random() * 2.5 + 0.8,
-      speedY: Math.random() * 1.3 + 0.6,
-      wobbleSpeed: Math.random() * 0.05 + 0.02,
-      wobbleAmp: Math.random() * 1.8 + 0.6,
+      radius: Math.random() * 2.2 + 0.8,
+      speedY: Math.random() * 1.1 + 0.5,
+      wobbleSpeed: Math.random() * 0.04 + 0.02,
+      wobbleAmp: Math.random() * 1.5 + 0.5,
       wobbleOffset: Math.random() * Math.PI * 2,
-      opacity: Math.random() * 0.7 + 0.25,
+      opacity: Math.random() * 0.6 + 0.2,
     }));
 
     let time = 0;
 
     const render = () => {
+      if (!isVisible) {
+        animationFrameId = null;
+        return;
+      }
+
       time += 1;
       ctx.clearRect(0, 0, width, height);
-      const speedMult = isHovered ? 1.9 : 1.1;
+      const speedMult = isHovered ? 1.6 : 1.0;
 
       bubbles.forEach((b) => {
         b.y -= b.speedY * speedMult;
@@ -37,25 +55,23 @@ function LiveFizzSimulator({ color = '#10b981', density = 32, width = 260, heigh
         if (b.y < -5) {
           b.y = height + Math.random() * 15;
           b.x = Math.random() * width;
-          b.opacity = Math.random() * 0.7 + 0.25;
+          b.opacity = Math.random() * 0.6 + 0.2;
         }
 
+        // Draw bubble without expensive shadowBlur
         ctx.save();
         ctx.beginPath();
         ctx.arc(currentX, b.y, b.radius, 0, Math.PI * 2);
         ctx.fillStyle = color;
-        ctx.globalAlpha = b.opacity * (isHovered ? 0.95 : 0.7);
-        ctx.shadowColor = color;
-        ctx.shadowBlur = isHovered ? 10 : 5;
+        ctx.globalAlpha = b.opacity * (isHovered ? 0.9 : 0.65);
         ctx.fill();
 
-        // Bubble highlight reflection
+        // Highlight glint
         ctx.beginPath();
         ctx.arc(currentX - b.radius * 0.3, b.y - b.radius * 0.3, b.radius * 0.35, 0, Math.PI * 2);
         ctx.fillStyle = '#ffffff';
-        ctx.globalAlpha = b.opacity * 0.85;
+        ctx.globalAlpha = b.opacity * 0.8;
         ctx.fill();
-
         ctx.restore();
       });
 
@@ -65,7 +81,8 @@ function LiveFizzSimulator({ color = '#10b981', density = 32, width = 260, heigh
     render();
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      observer.disconnect();
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
   }, [color, density, width, height, isHovered]);
 
@@ -167,278 +184,201 @@ const COCKTAILS = [
 ];
 
 export default function VictorianBarScene() {
-  const containerRef = useRef(null);
   const [activeBottle, setActiveBottle] = useState(null);
   const [hoveredCocktail, setHoveredCocktail] = useState(null);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start end', 'end start'],
-  });
-
-  // Spatial zoom: as the user scrolls, the room builds around them and moves closer
-  const sceneScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.96, 1.02, 1.08]);
-  const sceneY = useTransform(scrollYProgress, [0, 1], [40, -40]);
-  const sceneOpacity = useTransform(scrollYProgress, [0, 0.12, 0.88, 1], [0.4, 1, 1, 0.4]);
-
-  // Front counter items entrance
-  const deskItemsY = useTransform(scrollYProgress, [0.15, 0.45, 1], [80, 0, -20]);
-  const deskItemsOpacity = useTransform(scrollYProgress, [0.18, 0.35], [0, 1]);
-
   return (
     <section
-      ref={containerRef}
       id="the-bar-room"
-      className="relative min-h-[300vh] w-full bg-[#06060a] text-light selection:bg-gold/30 selection:text-gold"
+      className="relative min-h-screen w-full bg-[#06060a] text-light py-20 px-4 sm:px-6 lg:px-8 selection:bg-gold/30 selection:text-gold overflow-hidden"
     >
-      {/* STICKY CINEMATIC VIEWPORT */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
-        {/* Seamless blend from hero */}
+      {/* Background: Victorian Bar Architecture with subtle ambient lighting */}
+      <div className="absolute inset-0 z-0 h-full w-full pointer-events-none">
         <div
-          className="pointer-events-none absolute left-0 top-0 z-30 h-28 w-full"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat filter brightness-90 contrast-110 opacity-70"
+          style={{ backgroundImage: "url('/assets/victorian_bar_empty.jpg')" }}
+        />
+        <div
+          className="absolute inset-0"
           style={{
-            background: 'linear-gradient(to bottom, #06060a 0%, rgba(6,6,10,0.85) 50%, transparent 100%)',
+            background: `
+              radial-gradient(ellipse 95% 80% at 50% 40%, rgba(201, 162, 39, 0.08) 0%, rgba(6, 6, 10, 0.6) 60%, #06060a 100%),
+              linear-gradient(to bottom, rgba(6,6,10,0.8) 0%, transparent 25%, rgba(6,6,10,0.9) 100%)
+            `,
           }}
         />
+      </div>
 
-        {/* ════════════════════════════════════════════════════════════
-            LAYER 1: STRAIGHT-ON VICTORIAN BAR WITH BACK SHELVES & DESK
-        ════════════════════════════════════════════════════════════ */}
-        <motion.div
-          className="absolute inset-0 z-0 h-full w-full"
-          style={{
-            scale: sceneScale,
-            y: sceneY,
-            opacity: sceneOpacity,
-          }}
-        >
-          {/* Authentic straight-on Victorian Bar Background Image */}
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat filter brightness-90 contrast-110"
-            style={{ backgroundImage: "url('/assets/victorian_bar_empty.jpg')" }}
-          />
+      <div className="relative z-10 mx-auto max-w-6xl">
+        {/* ── HEADER ── */}
+        <div className="mb-10 text-center md:mb-14">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-black/60 px-4 py-1 backdrop-blur-md">
+            <Sparkles size={13} className="text-gold animate-pulse" />
+            <span className="font-inter text-[11px] font-semibold tracking-[0.3em] text-gold uppercase">
+              The Bar
+            </span>
+          </div>
 
-          {/* Warm Speakeasy Lighting Overlay */}
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background: `
-                radial-gradient(ellipse 95% 80% at 50% 40%, rgba(201, 162, 39, 0.08) 0%, rgba(6, 6, 10, 0.5) 60%, #06060a 100%),
-                linear-gradient(to bottom, rgba(6,6,10,0.6) 0%, transparent 35%, rgba(6,6,10,0.7) 100%)
-              `,
-            }}
-          />
+          <h2 className="font-playfair text-2xl font-black tracking-tight text-[#ede8dc] sm:text-3xl md:text-4xl lg:text-5xl max-w-3xl mx-auto leading-tight">
+            Bring us your ingredients.{' '}
+            <span className="text-gold">Watch the bartender work.</span>{' '}
+            Take your pour.
+          </h2>
+        </div>
 
-          {/* ── CLICKABLE GLITTERING BOTTLES ON THE BACK SHELVES ── */}
-          {SHELF_BOTTLES.map((bottle) => {
-            const isSelected = activeBottle?.id === bottle.id;
+        {/* ── CLICKABLE INTERACTIVE BOTTLES ON SHELVES (PREVIEWS) ── */}
+        <div className="mb-12 rounded-xl border border-gold/15 bg-black/50 p-4 backdrop-blur-md">
+          <div className="flex items-center justify-between border-b border-gold/15 pb-2 mb-3">
+            <span className="font-playfair text-xs font-bold text-gold uppercase tracking-wider">
+              Grand Reserve Bottles
+            </span>
+            <span className="font-mono text-[10px] text-smoke">Click to inspect vintage tasting profile</span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {SHELF_BOTTLES.map((bottle) => {
+              const isSelected = activeBottle?.id === bottle.id;
+              return (
+                <button
+                  key={bottle.id}
+                  onClick={() => setActiveBottle(isSelected ? null : bottle)}
+                  className={`flex items-center gap-2 rounded-lg border p-2 text-left transition-all ${
+                    isSelected
+                      ? 'border-gold bg-gold/20 shadow-[0_0_15px_rgba(201,162,39,0.3)]'
+                      : 'border-gold/15 bg-black/40 hover:border-gold/30 hover:bg-gold/10'
+                  }`}
+                >
+                  <Wine size={18} style={{ color: bottle.color }} />
+                  <div className="overflow-hidden">
+                    <span className="block truncate font-playfair text-xs font-bold text-light">
+                      {bottle.name}
+                    </span>
+                    <span className="block font-mono text-[9px] text-tarnished-gold">
+                      {bottle.vintage}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Tasting Notes Drawer */}
+          <AnimatePresence>
+            {activeBottle && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mt-3 rounded-lg border border-gold/30 bg-[#0e0a16] p-3 text-xs text-light/90"
+              >
+                <span className="font-bold text-gold">{activeBottle.name} Tasting Profile: </span>
+                {activeBottle.notes}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* ── 3 COCKTAILS SITTING DIRECTLY ON THE DESK ── */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
+          {COCKTAILS.map((cocktail) => {
+            const IconComponent = cocktail.icon;
+            const isHovered = hoveredCocktail === cocktail.id;
+
             return (
               <div
-                key={bottle.id}
-                style={{ left: bottle.posLeft, top: bottle.posTop }}
-                className="absolute z-20 -translate-x-1/2 -translate-y-1/2"
+                key={cocktail.id}
+                onMouseEnter={() => setHoveredCocktail(cocktail.id)}
+                onMouseLeave={() => setHoveredCocktail(null)}
+                className="group relative flex flex-col items-center"
               >
-                <div className="relative">
-                  {/* Glittering Golden Halo */}
-                  <motion.div
-                    animate={{
-                      scale: [1, 1.25, 1],
-                      opacity: [0.35, 0.75, 0.35],
-                    }}
-                    transition={{
-                      duration: 3 + Math.random() * 2,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }}
-                    className="pointer-events-none absolute -inset-3 rounded-full"
+                {/* ── THE FIZZY GLASS ON WOOD ── */}
+                <div className="relative flex h-60 w-full items-center justify-center sm:h-64 md:h-72">
+                  {/* Ambient colored liquid glow */}
+                  <div
+                    className="pointer-events-none absolute inset-0 transition-opacity duration-300"
                     style={{
-                      background: `radial-gradient(circle, rgba(201, 162, 39, 0.65) 0%, transparent 70%)`,
-                      filter: 'blur(6px)',
+                      background: `radial-gradient(circle at 50% 60%, ${cocktail.glowColor} 0%, transparent 65%)`,
+                      opacity: isHovered ? 1.0 : 0.6,
                     }}
                   />
 
-                  {/* Interactive Hotspot Trigger */}
-                  <motion.button
-                    onClick={() => setActiveBottle(isSelected ? null : bottle)}
-                    whileHover={{ scale: 1.2 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`group relative flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-300 ${
-                      isSelected
-                        ? 'border-gold bg-gold/30 shadow-[0_0_20px_rgba(201,162,39,0.8)]'
-                        : 'border-gold/50 bg-black/60 shadow-[0_0_12px_rgba(201,162,39,0.4)] hover:border-gold hover:bg-gold/20'
-                    }`}
-                  >
-                    <Sparkles size={14} className="text-gold transition-transform duration-300 group-hover:rotate-45" />
-                  </motion.button>
+                  {/* Glass base contact shadow */}
+                  <div
+                    className="pointer-events-none absolute bottom-4 h-5 w-28 rounded-full opacity-70 filter blur-md"
+                    style={{ background: 'rgba(0,0,0,0.95)' }}
+                  />
 
-                  {/* Bottle Tasting Plaque (Tooltip Popover) */}
-                  <AnimatePresence>
-                    {(isSelected || false) && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 8, scale: 0.9 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 4, scale: 0.9 }}
-                        className="absolute left-1/2 top-11 z-50 w-64 -translate-x-1/2 rounded-xl border border-gold/40 bg-[#0c0914]/95 p-3 text-left shadow-2xl backdrop-blur-xl"
+                  {/* Hyper-realistic Glass Image */}
+                  <img
+                    src={cocktail.image}
+                    alt={cocktail.title}
+                    className="relative z-10 h-full w-full object-contain p-2 drop-shadow-[0_15px_25px_rgba(0,0,0,0.7)] transition-transform duration-500 group-hover:scale-105"
+                  />
+
+                  {/* Live Animated Fizz & Bubble Canvas */}
+                  <LiveFizzSimulator
+                    color={cocktail.accentColor}
+                    density={isHovered ? 30 : 18}
+                    isHovered={isHovered}
+                    width={260}
+                    height={280}
+                  />
+                </div>
+
+                {/* ── LIQUID-FLOWING PARCHMENT TEXT CARD ── */}
+                <div
+                  className={`relative -mt-6 w-full rounded-xl border p-5 backdrop-blur-xl transition-all duration-300 ${
+                    cocktail.prominent
+                      ? 'border-gold/40 bg-[#0e0a16]/95 shadow-[0_12px_35px_rgba(0,0,0,0.8),0_0_20px_rgba(201,162,39,0.15)]'
+                      : 'border-gold/20 bg-[#09070e]/95 shadow-[0_10px_30px_rgba(0,0,0,0.7)]'
+                  }`}
+                >
+                  {/* Top Proof Tag */}
+                  <div className="flex items-center justify-between border-b border-gold/15 pb-2">
+                    <div className="flex items-center gap-1.5">
+                      <IconComponent size={13} style={{ color: cocktail.accentColor }} />
+                      <span className="font-mono text-[10px] font-bold text-light/90">
+                        {cocktail.number}
+                      </span>
+                    </div>
+                    <span
+                      className="rounded-full px-2 py-0.5 font-mono text-[9px] font-bold uppercase"
+                      style={{
+                        color: cocktail.accentColor,
+                        backgroundColor: `${cocktail.accentColor}20`,
+                        border: `1px solid ${cocktail.accentColor}40`,
+                      }}
+                    >
+                      {cocktail.proof}
+                    </span>
+                  </div>
+
+                  {/* Headline / Title */}
+                  <div className="mt-2.5">
+                    <h3 className="font-playfair text-base font-bold text-[#ede8dc] transition-colors group-hover:text-gold sm:text-lg">
+                      {cocktail.title}
+                    </h3>
+                    <p className="mt-1.5 font-inter text-xs leading-relaxed text-smoke/90">
+                      {cocktail.description}
+                    </p>
+                  </div>
+
+                  {/* Small Module / Output Labels */}
+                  <div className="mt-3.5 flex flex-wrap gap-1 border-t border-gold/10 pt-2.5">
+                    {cocktail.tags.map((tag, idx) => (
+                      <span
+                        key={idx}
+                        className="rounded border border-gold/15 bg-black/50 px-1.5 py-0.5 font-mono text-[9px] font-medium tracking-wide text-light/80 transition-colors group-hover:border-gold/30 group-hover:text-gold"
                       >
-                        <div className="flex items-center justify-between border-b border-gold/20 pb-1.5">
-                          <span className="font-playfair text-xs font-bold text-gold">{bottle.name}</span>
-                          <span className="font-mono text-[9px] text-tarnished-gold">{bottle.vintage}</span>
-                        </div>
-                        <p className="mt-1.5 font-inter text-[11px] leading-relaxed text-light/90">
-                          {bottle.notes}
-                        </p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             );
           })}
-        </motion.div>
-
-        {/* ════════════════════════════════════════════════════════════
-            LAYER 2: THE 3 COCKTAILS SITTING DIRECTLY ON THE WOODEN DESK
-        ════════════════════════════════════════════════════════════ */}
-        <motion.div
-          className="absolute inset-x-0 bottom-4 z-20 flex flex-col justify-end px-4 md:bottom-8 lg:px-8"
-          style={{
-            y: deskItemsY,
-            opacity: deskItemsOpacity,
-          }}
-        >
-          <div className="mx-auto w-full max-w-6xl">
-            {/* Header / Context Plaque */}
-            <div className="mb-4 text-center md:mb-6">
-              <span className="font-inter text-[10px] font-semibold tracking-[0.3em] text-tarnished-gold uppercase sm:text-[11px]">
-                How it Works
-              </span>
-              <h2 className="mt-1 font-playfair text-xl font-black tracking-tight text-[#ede8dc] sm:text-2xl md:text-3xl lg:text-4xl">
-                Three Cocktails. <span className="text-gold">One Supreme Pour.</span>
-              </h2>
-            </div>
-
-            {/* 3 Cocktails Grid sitting directly on the desk */}
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
-              {COCKTAILS.map((cocktail) => {
-                const IconComponent = cocktail.icon;
-                const isHovered = hoveredCocktail === cocktail.id;
-
-                return (
-                  <motion.div
-                    key={cocktail.id}
-                    onMouseEnter={() => setHoveredCocktail(cocktail.id)}
-                    onMouseLeave={() => setHoveredCocktail(null)}
-                    whileHover={{ y: -6 }}
-                    transition={{ duration: 0.3, ease: 'easeOut' }}
-                    className="group relative flex flex-col items-center"
-                  >
-                    {/* ── THE FIZZY GLASS DIRECTLY SITTING ON WOOD ── */}
-                    <div className="relative flex h-56 w-full items-center justify-center sm:h-64 md:h-72">
-                      {/* Ambient colored liquid backlight pool */}
-                      <div
-                        className="pointer-events-none absolute inset-0 transition-opacity duration-500"
-                        style={{
-                          background: `radial-gradient(circle at 50% 60%, ${cocktail.glowColor} 0%, transparent 65%)`,
-                          opacity: isHovered ? 1.0 : 0.65,
-                        }}
-                      />
-
-                      {/* Glass base contact shadow on the wooden desk */}
-                      <div
-                        className="pointer-events-none absolute bottom-4 h-6 w-32 rounded-full opacity-70 filter blur-md"
-                        style={{ background: 'rgba(0,0,0,0.95)' }}
-                      />
-
-                      {/* Hyper-realistic Glass Image */}
-                      <img
-                        src={cocktail.image}
-                        alt={cocktail.title}
-                        className="relative z-10 h-full w-full object-contain p-2 drop-shadow-[0_15px_25px_rgba(0,0,0,0.7)] transition-transform duration-700 ease-out group-hover:scale-105"
-                      />
-
-                      {/* Live Animated Fizz & Bubble Canvas */}
-                      <LiveFizzSimulator
-                        color={cocktail.accentColor}
-                        density={isHovered ? 40 : 25}
-                        isHovered={isHovered}
-                        width={260}
-                        height={280}
-                      />
-                    </div>
-
-                    {/* ── LIQUID-FLOWING PARCHMENT TEXT CARD ── */}
-                    <motion.div
-                      animate={{
-                        y: [0, -2.5, 0, 2.5, 0],
-                        rotate: [0, 0.15, 0, -0.15, 0],
-                      }}
-                      transition={{
-                        duration: 6,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                      }}
-                      className={`relative -mt-6 w-full rounded-xl border p-4 backdrop-blur-xl transition-all duration-300 sm:p-5 ${
-                        cocktail.prominent
-                          ? 'border-gold/40 bg-[#0e0a16]/90 shadow-[0_12px_35px_rgba(0,0,0,0.8),0_0_20px_rgba(201,162,39,0.15)]'
-                          : 'border-gold/20 bg-[#09070e]/90 shadow-[0_10px_30px_rgba(0,0,0,0.7)]'
-                      }`}
-                    >
-                      {/* Top Proof Tag */}
-                      <div className="flex items-center justify-between border-b border-gold/15 pb-2">
-                        <div className="flex items-center gap-1.5">
-                          <IconComponent size={13} style={{ color: cocktail.accentColor }} />
-                          <span className="font-mono text-[10px] font-bold text-light/90">
-                            {cocktail.number}
-                          </span>
-                        </div>
-                        <span
-                          className="rounded-full px-2 py-0.5 font-mono text-[9px] font-bold uppercase"
-                          style={{
-                            color: cocktail.accentColor,
-                            backgroundColor: `${cocktail.accentColor}20`,
-                            border: `1px solid ${cocktail.accentColor}40`,
-                          }}
-                        >
-                          {cocktail.proof}
-                        </span>
-                      </div>
-
-                      {/* Headline / Title */}
-                      <div className="mt-2.5">
-                        <h3 className="font-playfair text-base font-bold text-[#ede8dc] transition-colors group-hover:text-gold sm:text-lg">
-                          {cocktail.title}
-                        </h3>
-                        <p className="mt-1.5 font-inter text-xs leading-relaxed text-smoke/90">
-                          {cocktail.description}
-                        </p>
-                      </div>
-
-                      {/* Small Module / Output Labels */}
-                      <div className="mt-3.5 flex flex-wrap gap-1 border-t border-gold/10 pt-2.5">
-                        {cocktail.tags.map((tag, idx) => (
-                          <span
-                            key={idx}
-                            className="rounded border border-gold/15 bg-black/50 px-1.5 py-0.5 font-mono text-[9px] font-medium tracking-wide text-light/80 transition-colors group-hover:border-gold/30 group-hover:text-gold"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </motion.div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Atmospheric Vignette Overlay */}
-        <div
-          className="pointer-events-none absolute inset-0 z-25"
-          style={{
-            background: 'radial-gradient(ellipse 90% 85% at 50% 50%, transparent 45%, rgba(6,6,10,0.65) 100%)',
-          }}
-        />
+        </div>
       </div>
     </section>
   );
