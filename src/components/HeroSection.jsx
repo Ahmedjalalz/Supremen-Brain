@@ -159,7 +159,7 @@ function ScrollIndicator() {
 
 
 // ── Main Hero Section ───────────────────────────────────────────────────────────
-export default function HeroSection({ onReplayIntro }) {
+export default function HeroSection({ onReplayIntro, onOpenAuth }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -284,12 +284,12 @@ export default function HeroSection({ onReplayIntro }) {
               </button>
 
               {/* Gold pill CTA (Desktop) */}
-              <a
-                href="#pull-up-a-stool"
-                className="hidden md:inline-flex px-5 py-2 rounded-full bg-gradient-to-r from-[#d4a030] via-gold to-[#c8960a] text-[#0a0804] font-inter text-[12px] tracking-[0.12em] font-semibold hover:shadow-[0_0_18px_rgba(201,162,39,0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-250 uppercase items-center"
+              <button
+                onClick={() => onOpenAuth && onOpenAuth('signin')}
+                className="hidden md:inline-flex px-5 py-2 rounded-full bg-gradient-to-r from-[#d4a030] via-gold to-[#c8960a] text-[#0a0804] font-inter text-[12px] tracking-[0.12em] font-semibold hover:shadow-[0_0_18px_rgba(201,162,39,0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-250 uppercase items-center cursor-pointer"
               >
                 Pull Up a Stool
-              </a>
+              </button>
 
               {/* Hamburger (Mobile) */}
               <button
@@ -337,13 +337,15 @@ export default function HeroSection({ onReplayIntro }) {
                 </div>
 
                 <div className="mb-8">
-                  <a
-                    href="#pull-up-a-stool"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block w-full py-3.5 rounded-full bg-gold text-[#0a0804] font-inter text-[12px] tracking-[0.12em] font-semibold text-center hover:shadow-[0_0_18px_rgba(201,162,39,0.2)] transition-all uppercase"
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      if (onOpenAuth) onOpenAuth('signin');
+                    }}
+                    className="block w-full py-3.5 rounded-full bg-gold text-[#0a0804] font-inter text-[12px] tracking-[0.12em] font-semibold text-center hover:shadow-[0_0_18px_rgba(201,162,39,0.2)] transition-all uppercase cursor-pointer"
                   >
                     Pull Up a Stool
-                  </a>
+                  </button>
                 </div>
               </motion.div>
             )}
