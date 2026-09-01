@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Database,
   Upload,
@@ -177,7 +177,7 @@ function OrbitalEngine() {
   const [hoveredModule, setHoveredModule] = useState(null);
 
   return (
-    <div className="relative mx-auto flex h-[260px] w-full max-w-[320px] items-center justify-center">
+    <div className="relative mx-auto flex h-[260px] w-full max-w-[320px] items-center justify-center scale-[0.85] sm:scale-100 transition-transform">
       {/* Outer Orbital Ring 1 */}
       <motion.div
         animate={{ rotate: 360 }}
@@ -413,26 +413,8 @@ function PredictionTicketCard() {
 // MAIN EXPORT: SCENE 4 — HOW IT WORKS
 // ════════════════════════════════════════════════════════════════════
 export default function HowItWorksScene() {
-  const containerRef = useRef(null);
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start end', 'end start'],
-  });
-
-  // Sequential Entrance Parallax for the 3 Stations
-  const station1Opacity = useTransform(scrollYProgress, [0.1, 0.28], [0.2, 1]);
-  const station1Y = useTransform(scrollYProgress, [0.1, 0.28], [40, 0]);
-
-  const station2Opacity = useTransform(scrollYProgress, [0.25, 0.45], [0.2, 1]);
-  const station2Y = useTransform(scrollYProgress, [0.25, 0.45], [50, 0]);
-
-  const station3Opacity = useTransform(scrollYProgress, [0.42, 0.62], [0.2, 1]);
-  const station3Y = useTransform(scrollYProgress, [0.42, 0.62], [60, 0]);
-
   return (
     <section
-      ref={containerRef}
       id="how-it-works"
       className="relative w-full bg-[#06060a] py-24 px-4 sm:px-6 lg:px-8 text-light overflow-hidden"
     >
@@ -479,7 +461,10 @@ export default function HowItWorksScene() {
               STATION 1 (SCENE 4A) — YOUR INGREDIENTS
           ════════════════════════════════════════════════════════ */}
           <motion.div
-            style={{ opacity: station1Opacity, y: station1Y }}
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.45, delay: 0 }}
             className="flex flex-col justify-between rounded-2xl border border-gold/20 bg-gradient-to-b from-[#110d1a]/80 via-[#0a0710]/90 to-black p-6 shadow-2xl backdrop-blur-xl relative"
           >
             {/* Top Station Indicator */}
@@ -552,7 +537,10 @@ export default function HowItWorksScene() {
               STATION 2 (SCENE 4B) — THE MAKING (THE BARTENDER)
           ════════════════════════════════════════════════════════ */}
           <motion.div
-            style={{ opacity: station2Opacity, y: station2Y }}
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.45, delay: 0.08 }}
             className="flex flex-col justify-between rounded-2xl border border-gold/40 bg-gradient-to-b from-[#191226]/90 via-[#0e0a17]/95 to-black p-6 shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_35px_rgba(201,162,39,0.15)] backdrop-blur-xl relative"
           >
             {/* Top Station Indicator */}
@@ -602,7 +590,10 @@ export default function HowItWorksScene() {
               STATION 3 (SCENE 4C) — THE POUR (FINISHED PRODUCT)
           ════════════════════════════════════════════════════════ */}
           <motion.div
-            style={{ opacity: station3Opacity, y: station3Y }}
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.45, delay: 0.16 }}
             className="flex flex-col justify-between rounded-2xl border border-gold/20 bg-gradient-to-b from-[#110d1a]/80 via-[#0a0710]/90 to-black p-6 shadow-2xl backdrop-blur-xl relative"
           >
             {/* Top Station Indicator */}

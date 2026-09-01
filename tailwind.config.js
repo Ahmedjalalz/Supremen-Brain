@@ -11,9 +11,9 @@ export default {
         counter: "#0a0a12",
         wood: "#161620",
         gold: "#C9A227",
-        "tarnished-gold": "#9a7e2e",
-        light: "#e0e0e0",
-        smoke: "#666666",
+        "tarnished-gold": "#c5a448",
+        light: "#f0ece1",
+        smoke: "#a6a095",
       },
       fontFamily: {
         playfair: ["'Playfair Display'", "serif"],

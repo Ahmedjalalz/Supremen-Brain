@@ -406,7 +406,7 @@ export default function MenuScene() {
                 initial={{ opacity: 0, scale: 0.94, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.94, y: 20 }}
-                className="relative z-10 w-full max-w-xl overflow-hidden rounded-2xl border border-gold/40 bg-gradient-to-b from-[#1a1226] via-[#0d0915] to-[#060408] p-6 shadow-2xl sm:p-8"
+                className="relative z-10 w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl border border-gold/40 bg-gradient-to-b from-[#1a1226] via-[#0d0915] to-[#060408] p-6 shadow-2xl sm:p-8"
               >
                 {/* Close Button */}
                 <button

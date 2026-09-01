@@ -144,7 +144,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signin' }) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 15 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-md overflow-hidden rounded-2xl border border-gold/30 bg-gradient-to-b from-[#140e1f]/95 via-[#0c0814]/98 to-[#050408] p-6 sm:p-8 shadow-[0_20px_70px_rgba(0,0,0,0.9),0_0_35px_rgba(201,162,39,0.15)] backdrop-blur-2xl z-10"
+            className="relative w-full max-w-md max-h-[92vh] overflow-y-auto rounded-2xl border border-gold/30 bg-gradient-to-b from-[#140e1f]/95 via-[#0c0814]/98 to-[#050408] p-6 sm:p-8 shadow-[0_20px_70px_rgba(0,0,0,0.9),0_0_35px_rgba(201,162,39,0.15)] backdrop-blur-2xl z-10"
           >
             {/* Top Brass Inlay Line */}
             <div className="absolute top-0 left-8 right-8 h-[1.5px] bg-gradient-to-r from-transparent via-gold/50 to-transparent" />

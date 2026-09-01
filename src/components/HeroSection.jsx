@@ -222,12 +222,12 @@ export default function HeroSection({ onReplayIntro, onOpenAuth }) {
           />
         </div>
 
-        {/* Layer 2: Subtle atmospheric haze */}
+        {/* Layer 2: Seamless bottom atmospheric fade into #06060a */}
         <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
           <div
-            className="absolute bottom-0 left-0 w-full h-[40%]"
+            className="absolute bottom-0 left-0 w-full h-[45%]"
             style={{
-              background: 'linear-gradient(to top, rgba(6,6,10,0.6) 0%, transparent 100%)',
+              background: 'linear-gradient(to top, #06060a 0%, rgba(6,6,10,0.95) 25%, rgba(6,6,10,0.4) 70%, transparent 100%)',
             }}
           />
         </div>
