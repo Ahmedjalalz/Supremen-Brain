@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 
-export default function BartenderVideoPanel() {
+export default function BartenderVideoPanel({ isMobileBanner = false }) {
   const videoRef = useRef(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const animationFrameRef = useRef(null);
@@ -87,9 +87,59 @@ export default function BartenderVideoPanel() {
     };
   }, []);
 
+  if (isMobileBanner) {
+    // ── MOBILE TOP CINEMATIC BANNER (Left 50% Bartender with Headroom) ──
+    return (
+      <div className="relative h-full w-full overflow-hidden bg-[#06060a]">
+        <video
+          ref={videoRef}
+          src="/assets/Login-video.mp4"
+          autoPlay
+          muted
+          playsInline
+          preload="auto"
+          className={`absolute top-0 left-0 h-full w-[200%] max-w-none object-cover object-[0%_35%] transition-opacity duration-1000 ${
+            isVideoLoaded ? 'opacity-95' : 'opacity-0'
+          }`}
+          style={{
+            filter: 'brightness(0.92) contrast(1.1) saturate(1.05)',
+          }}
+        />
+
+        {/* Ambient Warm Vignette */}
+        <div
+          className="pointer-events-none absolute inset-0 mix-blend-color"
+          style={{
+            background: 'radial-gradient(ellipse at 30% 40%, rgba(201, 162, 39, 0.18) 0%, transparent 75%)',
+          }}
+        />
+
+        {/* Seamless Bottom Gradient into pure #06060a where panels render */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: `
+              linear-gradient(to bottom, rgba(6,6,10,0.3) 0%, transparent 25%, rgba(6,6,10,0.65) 70%, #06060a 100%),
+              linear-gradient(to right, transparent 65%, rgba(6,6,10,0.5) 100%)
+            `,
+          }}
+        />
+
+        {/* Subtle Gold Dust */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.2) 0%, transparent 60%)',
+          }}
+        />
+      </div>
+    );
+  }
+
+  // ── DESKTOP FULL SCREEN VIDEO BACKGROUND ──
   return (
     <div className="absolute inset-0 h-full w-full overflow-hidden bg-[#06060a]">
-      {/* ── FULL SCREEN VIDEO ELEMENT ── */}
+      {/* Video Element */}
       <video
         ref={videoRef}
         src="/assets/Login-video.mp4"
@@ -97,7 +147,7 @@ export default function BartenderVideoPanel() {
         muted
         playsInline
         preload="auto"
-        className={`h-full w-full object-cover object-[25%_center] md:object-[30%_center] transition-opacity duration-1000 ${
+        className={`h-full w-full object-cover object-[28%_center] transition-opacity duration-1000 ${
           isVideoLoaded ? 'opacity-90' : 'opacity-0'
         }`}
         style={{
@@ -105,7 +155,7 @@ export default function BartenderVideoPanel() {
         }}
       />
 
-      {/* ── AMBIENT WARMTH VIGNETTE OVERLAY ── */}
+      {/* Ambient Warmth Vignette Overlay */}
       <div
         className="pointer-events-none absolute inset-0 mix-blend-color"
         style={{
@@ -113,7 +163,7 @@ export default function BartenderVideoPanel() {
         }}
       />
 
-      {/* ── SEAMLESS DARK OVERLAY ON RIGHT HALF FOR AUTHENTICATION PANELS ── */}
+      {/* Seamless Dark Overlay on Right Half for Auth Panels */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -124,15 +174,7 @@ export default function BartenderVideoPanel() {
         }}
       />
 
-      {/* ── MOBILE DARK FADE SO TEXT IS ALWAYS CRISP ── */}
-      <div
-        className="pointer-events-none absolute inset-0 md:hidden"
-        style={{
-          background: 'linear-gradient(to bottom, rgba(6,6,10,0.3) 0%, rgba(6,6,10,0.8) 50%, #06060a 100%)',
-        }}
-      />
-
-      {/* ── SUBTLE GOLD DUST GLIMMER OVERLAY ── */}
+      {/* Subtle Gold Dust Glimmer */}
       <div
         className="pointer-events-none absolute inset-0 opacity-20"
         style={{
