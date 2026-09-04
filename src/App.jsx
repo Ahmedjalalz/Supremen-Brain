@@ -7,10 +7,16 @@ import MenuScene from './components/MenuScene';
 import WaitlistScene from './components/WaitlistScene';
 import Footer from './components/Footer';
 import AuthPage from './components/auth/AuthPage';
+import OrderPage from './components/order/OrderPage';
+import ResultsPage from './components/results/ResultsPage';
+import DashboardPage from './components/dashboard/DashboardPage';
 
 function App() {
   // Entrance animation plays on initial load
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(() => {
+    // Only play entrance animation on initial root visit
+    return window.location.pathname === '/' || !window.location.pathname;
+  });
 
   // Client-side routing state
   const [currentRoute, setCurrentRoute] = useState(() => {
@@ -42,6 +48,13 @@ function App() {
     }
   };
 
+  const handleOrderCocktail = (cocktailId) => {
+    if (cocktailId) {
+      localStorage.setItem('supreme_selected_cocktail', cocktailId);
+    }
+    handleNavigate('/order');
+  };
+
   const handleIntroComplete = () => {
     setShowIntro(false);
   };
@@ -65,16 +78,50 @@ function App() {
     );
   }
 
+  // Check if current route is The Making (/order)
+  if (currentRoute === '/order') {
+    return (
+      <>
+        <div className="film-grain" />
+        <OrderPage onNavigate={handleNavigate} onOpenAuth={handleOpenAuth} />
+      </>
+    );
+  }
+
+  // Check if current route is The Pour (/results)
+  if (currentRoute === '/results') {
+    return (
+      <>
+        <div className="film-grain" />
+        <ResultsPage onNavigate={handleNavigate} onOpenAuth={handleOpenAuth} />
+      </>
+    );
+  }
+
+  // Check if current route is The Back Room (/dashboard)
+  if (currentRoute === '/dashboard') {
+    return (
+      <>
+        <div className="film-grain" />
+        <DashboardPage onNavigate={handleNavigate} onOpenAuth={handleOpenAuth} />
+      </>
+    );
+  }
+
   return (
     <>
       <div className="film-grain" />
       {showIntro && <EntranceAnimation onComplete={handleIntroComplete} />}
-      <HeroSection onReplayIntro={handleReplayIntro} onOpenAuth={handleOpenAuth} />
+      <HeroSection
+        onReplayIntro={handleReplayIntro}
+        onOpenAuth={handleOpenAuth}
+        onNavigate={handleNavigate}
+      />
       <VictorianBarScene />
       <HowItWorksScene />
-      <MenuScene />
+      <MenuScene onNavigate={handleNavigate} onOrderCocktail={handleOrderCocktail} />
       <WaitlistScene />
-      <Footer onOpenAuth={handleOpenAuth} />
+      <Footer onOpenAuth={handleOpenAuth} onNavigate={handleNavigate} />
     </>
   );
 }

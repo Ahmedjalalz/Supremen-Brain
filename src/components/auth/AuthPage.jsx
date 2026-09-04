@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Sparkles } from 'lucide-react';
+import SupremeBrainLogo from '../SupremeBrainLogo';
 import BartenderVideoPanel from './BartenderVideoPanel';
 import LoginForm from './LoginForm';
 import SignUpWizard from './SignUpWizard';
@@ -72,7 +73,7 @@ export default function AuthPage({ currentRoute, onNavigate }) {
                 <div className="flex items-center gap-2.5">
                   {/* Mini Shaker / Brain Emblem */}
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#FFD700]/30 bg-black/70 shadow-[0_0_12px_rgba(255,215,0,0.2)]">
-                    <Sparkles size={16} className="text-[#FFD700]" />
+                    <SupremeBrainLogo className="w-4 h-4 text-[#FFD700]" />
                   </div>
 
                   <div>

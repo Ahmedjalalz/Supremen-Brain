@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import ParticleCanvas from './ParticleCanvas';
-import { Menu, X, ArrowRight, RotateCcw } from 'lucide-react';
+import Navbar from './Navbar';
+import { ArrowRight } from 'lucide-react';
 
 // ── Bottle Shelf Background ────────────────────────────────────────────────────
 // Abstract geometric bottle silhouettes with subtle internal glow.
@@ -159,18 +160,7 @@ function ScrollIndicator() {
 
 
 // ── Main Hero Section ───────────────────────────────────────────────────────────
-export default function HeroSection({ onReplayIntro, onOpenAuth }) {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
+export default function HeroSection({ onReplayIntro, onOpenAuth, onNavigate }) {
   // ── Entrance animation variants (staggered, cinematic) ──────────────────
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -236,121 +226,12 @@ export default function HeroSection({ onReplayIntro, onOpenAuth }) {
         <ParticleCanvas />
 
         {/* ── Navbar ──────────────────────────────────────────────────── */}
-        <nav
-          className={`fixed top-0 left-0 w-full transition-all duration-300 ${
-            isScrolled
-              ? 'bg-[#08080e]/85 backdrop-blur-xl border-b border-gold/[0.04] shadow-[0_4px_30px_rgba(0,0,0,0.5)]'
-              : 'bg-transparent'
-          }`}
-          style={{ zIndex: 40 }}
-        >
-          <div className={`max-w-6xl mx-auto px-6 flex items-center justify-between transition-all duration-300 ${
-            isScrolled ? 'py-3.5' : 'py-5'
-          }`}>
-            {/* Left: Brand */}
-            <a href="#" className="flex items-center">
-              <span className="font-playfair text-lg md:text-xl font-black text-gold tracking-wider">
-                SUPREME BRAIN
-              </span>
-            </a>
-
-            {/* Center: Navigation (Desktop) */}
-            <div className="hidden md:flex items-center gap-10">
-              {['How It Works', 'The Menu', 'The Bartender'].map((link, index) => (
-                <React.Fragment key={link}>
-                  <a
-                    href={`#${link.toLowerCase().replace(/\s+/g, '-')}`}
-                    className="font-inter text-[13px] text-smoke/80 hover:text-gold transition-colors duration-300 relative group tracking-wide"
-                  >
-                    {link}
-                    <span className="absolute bottom-[-4px] left-0 w-0 h-[1px] bg-gold/50 transition-all duration-300 group-hover:w-full" />
-                  </a>
-                  {index < 2 && (
-                    <span className="text-gold/15 text-[8px]">·</span>
-                  )}
-                </React.Fragment>
-              ))}
-            </div>
-
-            {/* Right: CTA + Mobile toggle */}
-            <div className="flex items-center gap-3">
-              {/* Replay entrance (small, understated) */}
-              <button
-                onClick={onReplayIntro}
-                title="Replay Entrance"
-                className="p-2 rounded-full border border-gold/[0.08] hover:border-gold/20 text-tarnished-gold/60 hover:text-gold transition-all duration-300 active:scale-95"
-              >
-                <RotateCcw size={13} />
-              </button>
-
-              {/* Gold pill CTA (Desktop) */}
-              <button
-                onClick={() => onOpenAuth && onOpenAuth('signin')}
-                className="hidden md:inline-flex px-5 py-2 rounded-full bg-gradient-to-r from-[#d4a030] via-gold to-[#c8960a] text-[#0a0804] font-inter text-[12px] tracking-[0.12em] font-semibold hover:shadow-[0_0_18px_rgba(201,162,39,0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-250 uppercase items-center cursor-pointer"
-              >
-                Pull Up a Stool
-              </button>
-
-              {/* Hamburger (Mobile) */}
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="md:hidden p-2 rounded-md text-gold/70 hover:text-gold hover:bg-wood/30 transition-colors"
-              >
-                {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-              </button>
-            </div>
-          </div>
-
-          {/* ── Mobile Drawer ──────────────────────────────────────────── */}
-          <AnimatePresence>
-            {isMobileMenuOpen && (
-              <motion.div
-                initial={{ x: '100%' }}
-                animate={{ x: 0 }}
-                exit={{ x: '100%' }}
-                transition={{ type: 'tween', duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="fixed inset-y-0 right-0 w-[280px] bg-[#08080e]/95 backdrop-blur-2xl border-l border-gold/[0.06] z-50 p-8 flex flex-col justify-between shadow-2xl h-screen"
-              >
-                <div className="flex flex-col gap-8 mt-12">
-                  <div className="flex justify-between items-center pb-6 border-b border-gold/[0.06]">
-                    <span className="font-playfair text-base font-black text-gold tracking-wider">THE BAR</span>
-                    <button
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="p-1 rounded-md text-gold/60 hover:text-gold transition-colors"
-                    >
-                      <X size={18} />
-                    </button>
-                  </div>
-
-                  <div className="flex flex-col gap-6">
-                    {['How It Works', 'The Menu', 'The Bartender'].map((link) => (
-                      <a
-                        key={link}
-                        href={`#${link.toLowerCase().replace(/\s+/g, '-')}`}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="font-inter text-base text-light/80 hover:text-gold transition-colors duration-200 tracking-wide"
-                      >
-                        {link}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="mb-8">
-                  <button
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      if (onOpenAuth) onOpenAuth('signin');
-                    }}
-                    className="block w-full py-3.5 rounded-full bg-gold text-[#0a0804] font-inter text-[12px] tracking-[0.12em] font-semibold text-center hover:shadow-[0_0_18px_rgba(201,162,39,0.2)] transition-all uppercase cursor-pointer"
-                  >
-                    Pull Up a Stool
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </nav>
+        <Navbar
+          currentRoute="/"
+          onNavigate={onNavigate}
+          onReplayIntro={onReplayIntro}
+          onOpenAuth={onOpenAuth}
+        />
 
         {/* ── Hero Content ────────────────────────────────────────────── */}
         <div className="flex-1 flex items-center justify-center relative" style={{ zIndex: 5 }}>

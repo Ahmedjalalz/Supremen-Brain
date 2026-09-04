@@ -1,5 +1,6 @@
 import React from 'react';
 import { Sparkles, ArrowUpRight } from 'lucide-react';
+import SupremeBrainLogo from './SupremeBrainLogo';
 
 // X / Twitter SVG Component
 function XIcon({ className = 'w-4 h-4' }) {
@@ -32,7 +33,7 @@ function GitHubIcon({ className = 'w-4 h-4' }) {
   );
 }
 
-export default function Footer({ onOpenAuth }) {
+export default function Footer({ onOpenAuth, onNavigate }) {
   return (
     <footer className="relative w-full bg-[#040307] text-light overflow-hidden border-t border-gold/15">
       {/* Background Ambience: Subtle Warm Hearth Reflection */}
@@ -49,8 +50,11 @@ export default function Footer({ onOpenAuth }) {
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-4 lg:gap-12 pb-14 border-b border-gold/10">
           {/* GROUP 1: BRAND & MISSION */}
           <div className="space-y-4">
-            <a href="#" className="inline-block">
-              <span className="font-playfair text-xl md:text-2xl font-black text-gold tracking-wider">
+            <a href="#" className="inline-flex items-center gap-2.5 group">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-gold/30 bg-black/60 shadow-[0_0_10px_rgba(201,162,39,0.2)] transition-transform group-hover:scale-105 shrink-0">
+                <SupremeBrainLogo className="w-5 h-5 text-gold" />
+              </div>
+              <span className="font-playfair text-xl md:text-2xl font-black text-gold tracking-wider group-hover:text-white transition-colors">
                 SUPREME BRAIN
               </span>
             </a>
@@ -108,10 +112,18 @@ export default function Footer({ onOpenAuth }) {
               </li>
               <li>
                 <button
-                  onClick={() => onOpenAuth && onOpenAuth('signup')}
+                  onClick={() => onNavigate ? onNavigate('/order') : null}
                   className="hover:text-gold transition-colors inline-flex items-center gap-1 cursor-pointer text-left"
                 >
-                  API Access & Docs <span className="font-mono text-[9px] text-tarnished-gold">v2.4</span>
+                  The Making (Order a Pour)
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate ? onNavigate('/results') : null}
+                  className="hover:text-gold transition-colors inline-flex items-center gap-1 cursor-pointer text-left"
+                >
+                  The Pour (Results View)
                 </button>
               </li>
               <li>

@@ -205,7 +205,7 @@ const MENU_COCKTAILS = [
   },
 ];
 
-export default function MenuScene() {
+export default function MenuScene({ onNavigate, onOrderCocktail }) {
   const [selectedCocktail, setSelectedCocktail] = useState(null);
   const [activeFilter, setActiveFilter] = useState('ALL');
 
@@ -488,14 +488,22 @@ export default function MenuScene() {
                   >
                     Close Menu
                   </button>
-                  <a
-                    href="#pull-up-a-stool"
-                    onClick={() => setSelectedCocktail(null)}
-                    className="rounded-full bg-gradient-to-r from-[#d4a030] via-gold to-[#c8960a] px-5 py-2 font-inter text-xs font-semibold uppercase tracking-wider text-[#0a0804] shadow-[0_0_20px_rgba(201,162,39,0.3)] hover:scale-105 transition-transform flex items-center gap-1.5"
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const id = selectedCocktail.id;
+                      setSelectedCocktail(null);
+                      if (onOrderCocktail) {
+                        onOrderCocktail(id);
+                      } else if (onNavigate) {
+                        onNavigate('/order');
+                      }
+                    }}
+                    className="rounded-full bg-gradient-to-r from-[#d4a030] via-gold to-[#c8960a] px-5 py-2 font-inter text-xs font-semibold uppercase tracking-wider text-[#0a0804] shadow-[0_0_20px_rgba(201,162,39,0.3)] hover:scale-105 transition-transform flex items-center gap-1.5 cursor-pointer"
                   >
                     <span>Order This Pour</span>
                     <ArrowRight size={14} />
-                  </a>
+                  </button>
                 </div>
               </motion.div>
             </div>

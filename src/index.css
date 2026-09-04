@@ -7,6 +7,8 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(201, 162, 39, 0.35) #06060a;
   }
   body {
     @apply bg-room text-light font-inter antialiased overflow-x-hidden selection:bg-gold/30 selection:text-gold;
@@ -16,6 +18,72 @@
     outline: none !important;
     -webkit-tap-highlight-color: transparent !important;
   }
+
+  /* Universal Speakeasy Themed Scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(201, 162, 39, 0.35) #06060a;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #06060a;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(201, 162, 39, 0.3);
+    border-radius: 9999px;
+    border: 1px solid rgba(201, 162, 39, 0.15);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(201, 162, 39, 0.65);
+    box-shadow: 0 0 10px rgba(201, 162, 39, 0.5);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: #06060a;
+  }
+}
+
+/* Custom Themed Scrollbar Utility for Drawers, Modals & Code Panels */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 162, 39, 0.35) rgba(10, 10, 18, 0.8);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(10, 10, 18, 0.6);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(201, 162, 39, 0.35);
+  border-radius: 9999px;
+  border: 1px solid rgba(201, 162, 39, 0.2);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 162, 39, 0.7);
+  box-shadow: 0 0 8px rgba(201, 162, 39, 0.4);
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 /* Film Grain Overlay - Lightweight Hardware-Accelerated */

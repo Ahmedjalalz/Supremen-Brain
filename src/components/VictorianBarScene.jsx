@@ -93,126 +93,6 @@ function LiveFizzSimulator({ color = '#10b981', density = 20, width = 260, heigh
   );
 }
 
-// ── SLEEK, ULTRA-ELEGANT VECTOR VINTAGE BOTTLES ─────────────────────
-function BottleVector({ type, color, isSelected, isHovered }) {
-  const liquidOpacity = isSelected ? 0.65 : isHovered ? 0.5 : 0.35;
-  const strokeColor = isSelected ? '#C9A227' : isHovered ? 'rgba(201,162,39,0.8)' : 'rgba(201,162,39,0.4)';
-
-  if (type === 'bordeaux') {
-    // 1872 Bordeaux Wine Bottle — Classic sleek high-shoulder silhouette
-    return (
-      <svg viewBox="0 0 60 150" width="46" height="125" className="transition-all duration-300">
-        <defs>
-          <linearGradient id="bordeauxGlass" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="rgba(255,255,255,0.15)" />
-            <stop offset="30%" stopColor="rgba(10,8,6,0.8)" />
-            <stop offset="70%" stopColor="rgba(20,15,10,0.6)" />
-            <stop offset="100%" stopColor="rgba(255,255,255,0.2)" />
-          </linearGradient>
-        </defs>
-        {/* Gold Capsule & Cork */}
-        <rect x="26.5" y="10" width="7" height="16" rx="1" fill="#C9A227" />
-        <rect x="25" y="8" width="10" height="3" rx="1" fill="#FFD700" />
-        {/* Bottle Body */}
-        <path d="M26 26 L26 46 Q26 58 16 70 L16 138 Q16 142 20 142 L40 142 Q44 142 44 138 L44 70 Q34 58 34 46 L34 26 Z" fill="url(#bordeauxGlass)" stroke={strokeColor} strokeWidth="1.2" />
-        {/* Wine Liquid */}
-        <path d="M17.5 76 Q30 73 42.5 76 L42.5 138 Q42.5 140.5 40 140.5 L20 140.5 Q17.5 140.5 17.5 138 Z" fill={color} fillOpacity={liquidOpacity} />
-        {/* Subtle Label Inset */}
-        <rect x="19" y="85" width="22" height="34" rx="1.5" fill="#14100c" stroke="rgba(201,162,39,0.7)" strokeWidth="0.8" />
-        <line x1="22" y1="93" x2="38" y2="93" stroke="#C9A227" strokeWidth="0.8" />
-        <line x1="23" y1="100" x2="37" y2="100" stroke="#a6a095" strokeWidth="0.5" strokeDasharray="1 1" />
-        <line x1="22" y1="107" x2="38" y2="107" stroke="#C9A227" strokeWidth="0.6" />
-        {/* Glass Edge Glint */}
-        <line x1="19" y1="72" x2="19" y2="136" stroke="#ffffff" strokeWidth="1" strokeOpacity="0.4" strokeLinecap="round" />
-      </svg>
-    );
-  }
-
-  if (type === 'cognac') {
-    // 1868 Cognac Decanter — Rounded shoulder curved crystal decanter
-    return (
-      <svg viewBox="0 0 70 150" width="56" height="125" className="transition-all duration-300">
-        <defs>
-          <linearGradient id="cognacGlass" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="rgba(255,255,255,0.2)" />
-            <stop offset="35%" stopColor="rgba(12,9,6,0.85)" />
-            <stop offset="65%" stopColor="rgba(22,16,10,0.6)" />
-            <stop offset="100%" stopColor="rgba(255,255,255,0.25)" />
-          </linearGradient>
-        </defs>
-        {/* Diamond Glass Stopper */}
-        <polygon points="35,6 43,14 35,22 27,14" fill="#C9A227" stroke="#FFD700" strokeWidth="0.8" />
-        <rect x="31.5" y="22" width="7" height="6" fill="#8B6914" />
-        {/* Decanter Curves */}
-        <path d="M31 28 L31 44 Q20 52 10 74 Q5 92 13 112 Q21 132 35 138 Q49 132 57 112 Q65 92 60 74 Q50 52 39 44 L39 28 Z" fill="url(#cognacGlass)" stroke={strokeColor} strokeWidth="1.2" />
-        {/* Amber Cognac Liquid */}
-        <path d="M12.5 82 Q35 76 57.5 82 Q63 98 56 114 Q48 130 35 136 Q22 130 14 114 Q7 98 12.5 82 Z" fill={color} fillOpacity={liquidOpacity} />
-        {/* Vintage Medallion Emblem */}
-        <circle cx="35" cy="96" r="9" fill="#16120c" stroke="#C9A227" strokeWidth="1" />
-        <circle cx="35" cy="96" r="6" fill="none" stroke="#C9A227" strokeWidth="0.6" strokeDasharray="1 1" />
-        {/* Glass Highlight */}
-        <path d="M14 78 Q9 94 17 112" fill="none" stroke="#ffffff" strokeWidth="1" strokeOpacity="0.4" strokeLinecap="round" />
-      </svg>
-    );
-  }
-
-  if (type === 'scotch') {
-    // 1865 Scotch Malt Flask — Heavy beveled solid whisky bottle
-    return (
-      <svg viewBox="0 0 64 150" width="50" height="125" className="transition-all duration-300">
-        <defs>
-          <linearGradient id="scotchGlass" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="rgba(255,255,255,0.18)" />
-            <stop offset="30%" stopColor="rgba(10,8,6,0.85)" />
-            <stop offset="70%" stopColor="rgba(24,18,12,0.6)" />
-            <stop offset="100%" stopColor="rgba(255,255,255,0.22)" />
-          </linearGradient>
-        </defs>
-        {/* Wooden & Brass Stopper */}
-        <rect x="27" y="10" width="10" height="10" rx="1.5" fill="#5c3a21" stroke="#C9A227" strokeWidth="0.8" />
-        <rect x="25" y="18" width="14" height="4" fill="#C9A227" />
-        {/* Square Shoulder Flask Body */}
-        <path d="M27 22 L27 38 L14 48 L14 136 Q14 140 18 140 L46 140 Q50 140 50 136 L50 48 L37 38 L37 22 Z" fill="url(#scotchGlass)" stroke={strokeColor} strokeWidth="1.2" />
-        {/* Malt Liquid */}
-        <path d="M15.5 58 L48.5 58 L48.5 136 Q48.5 138.5 46 138.5 L18 138.5 Q15.5 138.5 15.5 136 Z" fill={color} fillOpacity={liquidOpacity} />
-        {/* Parchment Label */}
-        <rect x="18" y="74" width="28" height="36" rx="1" fill="#18130c" stroke="#C9A227" strokeWidth="0.8" />
-        <line x1="21" y1="82" x2="43" y2="82" stroke="#C9A227" strokeWidth="0.9" />
-        <line x1="22" y1="90" x2="42" y2="90" stroke="#a6a095" strokeWidth="0.5" />
-        <line x1="21" y1="100" x2="43" y2="100" stroke="#C9A227" strokeWidth="0.7" />
-        {/* Highlight Reflection */}
-        <line x1="16" y1="52" x2="16" y2="134" stroke="#ffffff" strokeWidth="1" strokeOpacity="0.4" />
-      </svg>
-    );
-  }
-
-  // 1888 Champagne Extra Reserve — Imperial slender flute decanter
-  return (
-    <svg viewBox="0 0 58 150" width="48" height="125" className="transition-all duration-300">
-      <defs>
-        <linearGradient id="champagneGlass" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="rgba(255,255,255,0.2)" />
-          <stop offset="30%" stopColor="rgba(12,9,6,0.85)" />
-          <stop offset="70%" stopColor="rgba(20,16,10,0.6)" />
-          <stop offset="100%" stopColor="rgba(255,255,255,0.25)" />
-        </linearGradient>
-      </defs>
-      {/* Crown Foil Cap */}
-      <path d="M24 8 L34 8 L32 20 L26 20 Z" fill="#C9A227" stroke="#FFD700" strokeWidth="0.8" />
-      <polygon points="29,3 33,7 25,7" fill="#FFD700" />
-      {/* Slender Flute Body */}
-      <path d="M25 20 L25 46 Q16 64 16 98 Q16 138 22 140 L36 140 Q42 138 42 98 Q42 64 33 46 L33 20 Z" fill="url(#champagneGlass)" stroke={strokeColor} strokeWidth="1.2" />
-      {/* Golden Champagne Liquid */}
-      <path d="M17.5 80 Q29 75 40.5 80 Q40.5 108 35.5 138 L22.5 138 Q17.5 108 17.5 80 Z" fill={color} fillOpacity={liquidOpacity} />
-      {/* Imperial Oval Badge */}
-      <ellipse cx="29" cy="94" rx="8" ry="12" fill="#18130a" stroke="#C9A227" strokeWidth="0.8" />
-      <text x="29" y="97" textAnchor="middle" fill="#C9A227" fontSize="4.5" fontFamily="serif" fontWeight="bold">1888</text>
-      {/* Curve Glass Highlight */}
-      <path d="M18 64 Q17 92 20 132" fill="none" stroke="#ffffff" strokeWidth="1" strokeOpacity="0.4" />
-    </svg>
-  );
-}
-
 // ── VINTAGE BOTTLES DATA ─────────────────────────────────────────────
 const SHELF_BOTTLES = [
   {
@@ -221,7 +101,7 @@ const SHELF_BOTTLES = [
     vintage: 'Bordeaux Premier Cru',
     notes: 'Aged 50 years in toasted French oak. High prediction confidence with zero leakage and robust variance calibration.',
     color: '#eab308',
-    type: 'bordeaux',
+    image: '/assets/bottle_margaux.png',
     proof: '96 Proof Reserve',
     engineSpec: 'LSTM + Bayesian Priors',
   },
@@ -231,7 +111,7 @@ const SHELF_BOTTLES = [
     vintage: 'Grande Champagne Reserve',
     notes: 'Spiced vanilla, dried plum, Monte Carlo calibration. Sized for optimal asymmetric edge identification.',
     color: '#f59e0b',
-    type: 'cognac',
+    image: '/assets/bottle_hennessy.png',
     proof: '98 Proof Distilled',
     engineSpec: '10k Monte Carlo Paths',
   },
@@ -241,7 +121,7 @@ const SHELF_BOTTLES = [
     vintage: 'Pure Scotch Single Malt',
     notes: 'Wild heather, sea salt, Bayesian stochastic priors. Extremely low latency processing with tight risk bounds.',
     color: '#d97706',
-    type: 'scotch',
+    image: '/assets/bottle_glenglassaugh.png',
     proof: '94 Proof Highland',
     engineSpec: 'Sub-40ms Arbitrage Engine',
   },
@@ -251,7 +131,7 @@ const SHELF_BOTTLES = [
     vintage: 'Extra Imperial Reserve',
     notes: 'Rancio, candied orange, Kelly criterion optimal sizing. Built for high-conviction institutional consensus.',
     color: '#fbbf24',
-    type: 'champagne',
+    image: '/assets/bottle_champagne.png',
     proof: '100 Proof Imperial',
     engineSpec: 'Meta-Ensemble Consensus',
   },
@@ -387,20 +267,23 @@ export default function VictorianBarScene() {
 
                   {/* Bottle Illustration with smooth elevation */}
                   <div
-                    className={`relative z-10 flex h-32 items-end justify-center transition-transform duration-300 ${
-                      isSelected ? '-translate-y-2 scale-105' : isHovered ? '-translate-y-1' : ''
+                    className={`relative z-10 flex h-40 sm:h-48 items-end justify-center transition-all duration-300 ${
+                      isSelected
+                        ? '-translate-y-2.5 scale-105 filter drop-shadow-[0_0_20px_rgba(201,162,39,0.55)]'
+                        : isHovered
+                        ? '-translate-y-1.5 scale-[1.02] filter drop-shadow-[0_0_12px_rgba(201,162,39,0.35)]'
+                        : 'filter brightness-95 contrast-105'
                     }`}
                   >
-                    <BottleVector
-                      type={bottle.type}
-                      color={bottle.color}
-                      isSelected={isSelected}
-                      isHovered={isHovered}
+                    <img
+                      src={bottle.image}
+                      alt={bottle.name}
+                      className="h-full w-auto max-w-[125px] object-contain select-none pointer-events-none drop-shadow-[0_14px_24px_rgba(0,0,0,0.95)]"
                     />
                   </div>
 
                   {/* Contact Glass Shadow on Shelf Wood */}
-                  <div className="h-1.5 w-12 rounded-full bg-black/90 filter blur-[2px] mt-1 mb-2" />
+                  <div className="h-2 w-20 rounded-full bg-black/95 filter blur-[3px] mt-1 mb-2" />
 
                   {/* Bottle Title on Shelf Deck */}
                   <div className="text-center w-full px-1">
