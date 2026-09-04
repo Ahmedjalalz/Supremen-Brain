@@ -4,155 +4,162 @@ export default function SupremeBrainLogo({ className = 'w-8 h-8', showGlow = tru
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 128 128"
+      viewBox="0 0 64 64"
       className={`${className} transition-transform duration-300 group-hover:scale-105 shrink-0`}
       fill="none"
       aria-label="Supreme Brain Emblem"
     >
       <defs>
-        <linearGradient id="sbGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FFF1B0" />
-          <stop offset="35%" stopColor="#F5CD47" />
-          <stop offset="70%" stopColor="#C9A227" />
-          <stop offset="100%" stopColor="#8A6814" />
+        <linearGradient id="logoGoldBright" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FFF7C2" />
+          <stop offset="30%" stopColor="#F5D061" />
+          <stop offset="70%" stopColor="#D4A017" />
+          <stop offset="100%" stopColor="#9E7008" />
         </linearGradient>
 
-        <linearGradient id="sbStemGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#8A6814" />
-          <stop offset="50%" stopColor="#E5BE38" />
-          <stop offset="100%" stopColor="#FFEAA0" />
+        <linearGradient id="logoGoldHigh" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stopColor="#D4A017" />
+          <stop offset="50%" stopColor="#FDE68A" />
+          <stop offset="100%" stopColor="#FFFFFF" />
+        </linearGradient>
+
+        <linearGradient id="logoGoldDeep" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#B8860B" />
+          <stop offset="50%" stopColor="#8A6305" />
+          <stop offset="100%" stopColor="#573D00" />
         </linearGradient>
 
         {showGlow && (
-          <filter id="sbEmblemGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="1.8" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
+          <filter id="logoGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="1" stdDeviation="1.5" floodColor="#D4A017" floodOpacity="0.4" />
           </filter>
         )}
       </defs>
 
-      {/* Decorative Outer Ring */}
-      <circle
-        cx="64"
-        cy="64"
-        r="60"
-        fill="#06060c"
-        stroke="url(#sbGoldGrad)"
-        strokeWidth="1.5"
-        className="opacity-90"
-      />
-      <circle
-        cx="64"
-        cy="64"
-        r="56"
-        fill="none"
-        stroke="#C9A227"
-        strokeWidth="0.8"
-        strokeDasharray="2 3"
-        className="opacity-40"
-      />
-
-      {/* Flared Base */}
-      <path
-        d="M42 108 L86 108 L80 102 L48 102 Z"
-        fill="url(#sbGoldGrad)"
-        filter={showGlow ? 'url(#sbEmblemGlow)' : undefined}
-      />
-      <rect x="46" y="104" width="36" height="1.5" fill="#FFF1B0" opacity="0.8" />
-
-      {/* Slender Stem with Turned Rings */}
-      <rect x="61.5" y="78" width="5" height="24" rx="1.5" fill="url(#sbStemGrad)" />
-      <ellipse cx="64" cy="94" rx="6.5" ry="2" fill="url(#sbGoldGrad)" />
-      <ellipse cx="64" cy="85" rx="5.5" ry="1.5" fill="url(#sbGoldGrad)" />
-
-      {/* Glass Bowl Chevron / Coupe Rim */}
-      <polygon
-        points="64,80 34,58 94,58"
-        fill="none"
-        stroke="url(#sbGoldGrad)"
-        strokeWidth="3"
-        strokeLinejoin="round"
-      />
-      <polygon points="64,76 44,61 84,61" fill="#C9A227" fillOpacity="0.25" />
-
-      {/* Brain Cerebrum & Neural Lattice */}
-      <path
-        d="M62 55 C52 55 42 52 35 45 C28 38 29 27 37 20 C42 15 50 15 55 19 C58 21 61 24 62 27 Z"
-        fill="none"
-        stroke="url(#sbGoldGrad)"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-      <path
-        d="M37 32 C43 32 48 37 53 35 C58 33 60 28 62 27"
-        fill="none"
-        stroke="url(#sbGoldGrad)"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M42 42 C48 40 52 44 62 43"
-        fill="none"
-        stroke="url(#sbGoldGrad)"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-
-      <path
-        d="M66 55 C76 55 86 52 93 45 C100 38 99 27 91 20 C86 15 78 15 73 19 C70 21 67 24 66 27 Z"
-        fill="none"
-        stroke="url(#sbGoldGrad)"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-      <path
-        d="M91 32 C85 32 80 37 75 35 C70 33 68 28 66 27"
-        fill="none"
-        stroke="url(#sbGoldGrad)"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M86 42 C80 40 76 44 66 43"
-        fill="none"
-        stroke="url(#sbGoldGrad)"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-
-      {/* Central Longitudinal Fissure */}
-      <line
-        x1="64"
-        y1="20"
-        x2="64"
-        y2="56"
-        stroke="url(#sbGoldGrad)"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-
-      {/* Glowing Synapse Nodes */}
-      <circle cx="37" cy="20" r="2.8" fill="#FFF8D6" filter={showGlow ? 'url(#sbEmblemGlow)' : undefined} />
-      <circle cx="55" cy="19" r="2.5" fill="#FFF8D6" filter={showGlow ? 'url(#sbEmblemGlow)' : undefined} />
-      <circle cx="35" cy="45" r="2.5" fill="#FFF8D6" filter={showGlow ? 'url(#sbEmblemGlow)' : undefined} />
-      <circle cx="48" cy="35" r="2.8" fill="#FFF8D6" filter={showGlow ? 'url(#sbEmblemGlow)' : undefined} />
-
-      <circle cx="91" cy="20" r="2.8" fill="#FFF8D6" filter={showGlow ? 'url(#sbEmblemGlow)' : undefined} />
-      <circle cx="73" cy="19" r="2.5" fill="#FFF8D6" filter={showGlow ? 'url(#sbEmblemGlow)' : undefined} />
-      <circle cx="93" cy="45" r="2.5" fill="#FFF8D6" filter={showGlow ? 'url(#sbEmblemGlow)' : undefined} />
-      <circle cx="80" cy="35" r="2.8" fill="#FFF8D6" filter={showGlow ? 'url(#sbEmblemGlow)' : undefined} />
-
-      {/* Celestial Distillation Spark */}
-      <g transform="translate(64, 13)">
+      <g filter={showGlow ? 'url(#logoGlow)' : undefined}>
+        {/* Dark Silhouette Backing */}
         <path
-          d="M0 -7 Q1 -1 7 0 Q1 1 0 7 Q-1 1 -7 0 Q-1 -1 0 -7 Z"
-          fill="url(#sbGoldGrad)"
-          filter={showGlow ? 'url(#sbEmblemGlow)' : undefined}
+          d="M22 6
+             C33 5 44 9 52 17
+             C58 23 58 32 54 39
+             C50 44 42 45 36 45
+             C35 48 37 56 39 59
+             L23 59
+             C25 56 27 48 26 45
+             C19 45 13 41 9 34
+             C5 26 8 16 16 10
+             C18 8 20 7 22 6 Z"
+          fill="#0B0803"
+          stroke="#000000"
+          strokeWidth="2"
+          strokeLinejoin="round"
         />
-        <circle cx="0" cy="0" r="1.5" fill="#FFFFFF" />
+
+        {/* 1. Frontal Superior Lobe (Top Left) */}
+        <path
+          d="M22 7
+             C28 6.5 35 8.5 40 12
+             L35 18
+             C30 15 24 14 18 16
+             L17 12
+             C18.5 10 20.2 8.3 22 7 Z"
+          fill="url(#logoGoldHigh)"
+        />
+
+        {/* 2. Parietal Crown Lobe (Top Right) */}
+        <path
+          d="M42 13.5
+             C46.5 17 50.5 21.5 52 27
+             L45 28
+             C44 24 40.5 20.5 36.5 19
+             Z"
+          fill="url(#logoGoldBright)"
+        />
+
+        {/* 3. Frontal Anterior Lobe */}
+        <path
+          d="M15.5 13.5
+             L17 17.5
+             C13 19 10 23 9.5 27
+             L5 25.5
+             C6 19.5 10 15.5 15.5 13.5 Z"
+          fill="url(#logoGoldBright)"
+        />
+
+        {/* 4. Central Sulcus / Mid-Brain Facet */}
+        <path
+          d="M18.5 19
+             C24 17 31 18 35 21
+             L36 26
+             C31 24 24 24 19 27
+             L17.5 22.5 Z"
+          fill="url(#logoGoldHigh)"
+        />
+
+        {/* 5. Occipital Lobe */}
+        <path
+          d="M45.5 30
+             L53 29
+             C53.5 33 52 37 48.5 40
+             L43 36
+             C44.5 34 45.5 32 45.5 30 Z"
+          fill="url(#logoGoldDeep)"
+        />
+
+        {/* 6. Center Cortex Bridge */}
+        <path
+          d="M20 29
+             C26 26.5 34 26.5 41 30
+             L39 35
+             C33 32.5 26 33 21 36
+             Z"
+          fill="url(#logoGoldBright)"
+        />
+
+        {/* 7. Temporal Lobe */}
+        <path
+          d="M11 29
+             L18 30
+             C19 33 17 37 13 38.5
+             C10.5 36 9.5 32.5 11 29 Z"
+          fill="url(#logoGoldDeep)"
+        />
+
+        {/* 8. Lower Temporal Convolutions */}
+        <path
+          d="M22 38
+             C28 35 36 34 42 38
+             L40 43
+             C34 40 27 41 23 44
+             Z"
+          fill="url(#logoGoldBright)"
+        />
+
+        {/* 9. Cerebellum Striations */}
+        <path
+          d="M43.5 41
+             L48 39.5
+             C46.5 43.5 42 45.5 37 45.5
+             L38 42
+             C40.5 42 42.5 41.5 43.5 41 Z"
+          fill="url(#logoGoldDeep)"
+        />
+
+        {/* Fluted Cocktail Pedestal Stem */}
+        <path
+          d="M28 45
+             C29 48 30 54 26 57
+             L36 57
+             C32 54 33 48 34 45
+             Z"
+          fill="url(#logoGoldBright)"
+        />
+        <rect x="22" y="57" width="18" height="3" rx="1" fill="url(#logoGoldHigh)" />
+        <rect x="20" y="59.5" width="22" height="1.5" rx="0.75" fill="url(#logoGoldDeep)" />
+
+        {/* Apex Crown Spark */}
+        <polygon points="26,1 27.5,4.5 31,5.5 27.5,6.5 26,10 24.5,6.5 21,5.5 24.5,4.5" fill="#FFFDF0" />
+        <circle cx="26" cy="5.5" r="1" fill="#D4A017" />
       </g>
     </svg>
   );
